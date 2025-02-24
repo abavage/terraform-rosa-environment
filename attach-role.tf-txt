@@ -1,0 +1,15 @@
+
+data "aws_iam_policy" "sns_policy_get" {
+    name = "sns-policy"
+}
+
+
+#data.aws_iam_policy.sns_policy_get
+
+
+resource "aws_iam_role_policy_attachment" "attach_policy" {
+  role       = "ManagedOpenShift-HCP-ROSA-Worker-Role"
+  #policy_arn = data.aws_iam_policy.sns_policy_get.arn
+  policy_arn = aws_iam_policy.sns_policy.arn
+}
+
