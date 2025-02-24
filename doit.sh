@@ -29,5 +29,6 @@ mv /home/ec2-user/bin/linux-amd64/helm /home/ec2-user/bin/
 
 chown -R ec2-user:ec2-user /home/ec2-user/bin
 chown -R ec2-user:ec2-user /home/ec2-user/.aws
+mkdir /home/ec2-user/blah
 
 dnf -y install git

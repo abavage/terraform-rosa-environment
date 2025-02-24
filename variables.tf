@@ -72,3 +72,9 @@ variable "security_group_default_allow_ip" {
    "egress"  = "0.0.0.0/0"
   }
 }
+
+variable "terraform_state_bucket" {
+  type        = string
+  default     = "rosa-environment-state"
+  description = "defautl state bucket for the aws environment"
+}

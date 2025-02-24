@@ -30,4 +30,5 @@ resource "aws_instance" "vm" {
     another_tag = "tf-node"
   }
   user_data = file("doit.sh")
+  user_data_replace_on_change = true
 }
