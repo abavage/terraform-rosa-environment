@@ -17,6 +17,22 @@ output "ami_id" {
   value = data.aws_ami.amazon-linux.id
 }
 
+data "aws_ami" "centos" {
+  most_recent = true
+  owners      = ["125523088429"] # CentOS official account
+
+  filter {
+    name   = "name"
+    values = ["CentOS Stream 9 x86_64 2025*"]
+  }
+}
+
+output "centos_ami_id" {
+  value = data.aws_ami.centos.id
+}
+
+
+
 
 data "aws_ssm_parameter" "al2023" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
@@ -28,8 +44,8 @@ output "param_id" {
 }
 
 resource "aws_instance" "vm" {
-  #ami           = data.aws_ami.amazon-linux.id
-  ami           = data.aws_ssm_parameter.al2023.value
+  ami           = data.aws_ami.centos.id
+  #ami           = data.aws_ssm_parameter.al2023.value
   subnet_id      = tolist(data.aws_subnets.rosa_public_subnets.ids)[0]
   vpc_security_group_ids = [aws_security_group.ssh.id]
   instance_type = "t3.micro"
