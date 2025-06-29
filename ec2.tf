@@ -43,14 +43,49 @@ output "param_id" {
   #sensitive = true
 }
 
+#
+# security groups
+#
+
+resource "aws_security_group" "common" {
+  name        = "ec2_common"
+  description = "common ingress port to ec2 hosts"
+  vpc_id      = aws_vpc.vpc.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ingress_rules" {
+  for_each = var.ec2_sg_rules
+
+  security_group_id = aws_security_group.common.id
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  cidr_ipv4         = each.value.cidr_ipv4
+  ip_protocol       = each.value.ip_protocol
+}
+
+
+resource "aws_vpc_security_group_egress_rule" "egress_rules" {
+  for_each = var.ec2_sg_rules
+
+  security_group_id = aws_security_group.common.id
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  cidr_ipv4         = each.value.cidr_ipv4
+  ip_protocol       = each.value.ip_protocol
+
+}
+
 resource "aws_instance" "vm" {
   ami           = data.aws_ami.centos.id
   #ami           = data.aws_ssm_parameter.al2023.value
   subnet_id      = tolist(data.aws_subnets.rosa_public_subnets.ids)[0]
-  vpc_security_group_ids = [aws_security_group.ssh.id]
+  vpc_security_group_ids = [aws_security_group.common.id]
   instance_type = "t3.micro"
   key_name        = aws_key_pair.ssh_key.key_name
   associate_public_ip_address = true
+  root_block_device {
+    volume_size = "15"
+  }
   metadata_options {
     http_tokens = "optional"
     http_endpoint = "enabled"
@@ -59,7 +94,13 @@ resource "aws_instance" "vm" {
   tags = {
     Name = "one"
     another_tag = "tf-node"
+    blah        = "jjj"
+    this        = "that"
   }
   user_data = file("doit.sh")
   user_data_replace_on_change = true
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }

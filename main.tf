@@ -7,7 +7,7 @@ provider "aws" {
       Environment = "dev-hcp-0"
       Cluster     = var.cluster_name
       Customer    = "developers"
-      Project     = "test"
+      Project     = "testing"
       rosa_cluster =  var.cluster_name
     }
   }
@@ -218,31 +218,6 @@ resource "aws_nat_gateway" "main" {
 
   depends_on = [aws_eip.nat]
 }
-
-#
-# security groups ssh
-#
-resource "aws_security_group" "ssh" {
-  name = "allow_ssh"
-  description = "allow sshd traffic on port 22"
-  vpc_id = aws_vpc.vpc.id
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ingress_ssh" {
-  security_group_id = aws_security_group.ssh.id
-  cidr_ipv4 = "0.0.0.0/0"
-  ip_protocol = "tcp"
-  from_port = 22
-  to_port = 22
-}
-
-resource "aws_vpc_security_group_egress_rule" "egress_ssh" {
-  security_group_id = aws_security_group.ssh.id
-  cidr_ipv4 = "0.0.0.0/0"
-  ip_protocol = "-1"
-}
-
-
 
 #
 # source data

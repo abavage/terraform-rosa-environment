@@ -73,6 +73,40 @@ variable "security_group_default_allow_ip" {
   }
 }
 
+variable "ec2_sg_rules" {
+  type = map(any)
+  default = {
+    "ssh" = {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_ipv4   = "0.0.0.0/0"
+      ip_protocol = "tcp"
+    }
+    "http" = {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_ipv4   = "0.0.0.0/0"
+      ip_protocol = "tcp"
+    }
+    "https" = {
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      cidr_ipv4   = "0.0.0.0/0"
+      ip_protocol = "tcp"
+    }
+    "squid" = {
+      from_port   = 3128
+      to_port     = 3128
+      protocol    = "tcp"
+      cidr_ipv4   = "0.0.0.0/0"
+      ip_protocol = "tcp"
+    }
+  }
+}
+
 variable "terraform_state_bucket" {
   type        = string
   default     = "rosa-environment-state"
