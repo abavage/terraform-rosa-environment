@@ -1,15 +1,19 @@
-# vpc-subnet-nat
-
 provider "aws" {
   region = var.aws_region
   default_tags {
-    tags = {
-      Environment = "dev-hcp-0"
-      Cluster     = var.cluster_name
-      Customer    = "developers"
-      Project     = "testing"
-      rosa_cluster =  var.cluster_name
-    }
+    tags = local.tags
+  }
+}
+
+locals {
+  tags = {
+    my_cluster_name = "this-cluster"
+    region       = "ap-southeast-2"
+    Environment = "dev-hcp-0"
+    Cluster     = var.cluster_name
+    Customer    = "developers"
+    Project     = "testing"
+    rosa_cluster =  var.cluster_name
   }
 }
 
