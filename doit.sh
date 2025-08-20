@@ -31,6 +31,8 @@ chown -R ec2-user:ec2-user /home/ec2-user/bin
 chown -R ec2-user:ec2-user /home/ec2-user/.aws
 mkdir /home/ec2-user/blah
 
-dnf -y install git podman vim jq
+dnf -y install git podman vim jq squid
 
 systemctl enable --now podman 
+systemctl enable --now squid
+
