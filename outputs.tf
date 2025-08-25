@@ -28,3 +28,11 @@ output "aws_nat_gateways" {
 output "subnet_length" {
   value = length(var.rosa_public_subnet)
 }
+
+output "vpc_id" {
+  value = data.aws_vpc.get_rosa_vpc
+}
+
+output "private_route_table" {
+   value = data.aws_route_tables.private.ids
+}

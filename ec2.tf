@@ -51,6 +51,12 @@ resource "aws_security_group" "common" {
   name        = "ec2_common"
   description = "common ingress port to ec2 hosts"
   vpc_id      = aws_vpc.vpc.id
+
+  tags = {
+    Name         = "ec2_common"
+  }
+
+
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ingress_rules" {
