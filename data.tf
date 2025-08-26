@@ -3,6 +3,9 @@ data "aws_vpc" "get_rosa_vpc" {
     name = "tag:Name"
     values = ["rosa-vpc"]
   }
+  depends_on = [
+    aws_vpc.vpc
+  ]
 }
 
 data "aws_subnets" "private_subnets" {
@@ -15,6 +18,9 @@ data "aws_subnets" "private_subnets" {
   tags = {
     Name = "rosa-private-subnet*"
   }
+  depends_on = [
+    aws_vpc.vpc
+  ]
 }
 
 data "aws_route_tables" "private" {
@@ -24,5 +30,8 @@ data "aws_route_tables" "private" {
     name   = "tag:Name"
     values = ["*private*"] # adjust to match your naming convention
   }
+  depends_on = [
+    aws_vpc.vpc
+  ]
 }
 

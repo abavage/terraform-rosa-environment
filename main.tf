@@ -1,8 +1,8 @@
 provider "aws" {
   region = var.aws_region
-  default_tags {
-    tags = local.tags
-  }
+  #default_tags {
+  #  tags = local.tags
+  #}
 }
 
 locals {
@@ -185,6 +185,8 @@ resource "aws_route_table_association" "private_route_table_association" {
 
   depends_on = [aws_route_table.private_route]
 }
+
+
 
 #
 # eip

@@ -1,29 +1,44 @@
 resource "aws_security_group" "authorize_inbound_vpc_traffic" {
   vpc_id = data.aws_vpc.get_rosa_vpc.id
-  name   = "vpce-sg"
+  name   = "private-cluster-vpce"
+  description = "security grroup for private cluster vpce"
 
   tags = {
-    Terraform    = "true"
     service      = "ROSA"
-    cluster_name = var.cluster_name
-    Name         = "vpce-sg"
+    Name         = "private-cluster-vpce"
   }
-  
 }
 
-resource "aws_vpc_security_group_ingress_rule" "allow_ingress" {
+# Ingress rules (one per subnet CIDR from the map)
+resource "aws_vpc_security_group_ingress_rule" "allow_inbound_from_private_subnets" {
+  for_each          = var.rosa_private_subnet
   security_group_id = aws_security_group.authorize_inbound_vpc_traffic.id
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 443
-  ip_protocol       = "tcp"
-  to_port           = 443
+  cidr_ipv4         = each.value   # map value is the CIDR block
+  ip_protocol       = "-1"
+  #from_port         = 0
+  #to_port           = 0
+
+  # Optional: keep track of which AZ created this rule
+  description = "Allow from ${each.key}"
+
+  tags = {
+    service      = "ROSA"
+    Name         = "private-cluster-vpce-ingress-${each.key}"
+  }
 }
 
-resource "aws_vpc_security_group_egress_rule" "allow_egress" {
+# Egress rule (allow all outbound traffic)
+resource "aws_vpc_security_group_egress_rule" "allow_all_egress" {
   security_group_id = aws_security_group.authorize_inbound_vpc_traffic.id
   cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1" # semantically equivalent to all ports
+  ip_protocol       = "-1" # all traffic
+
+  tags = {
+    service      = "ROSA"
+    Name         = "private-cluster-vpce-egress"
+  }
 }
+
 
 
 resource "aws_vpc_endpoint" "sts" {
@@ -36,10 +51,8 @@ resource "aws_vpc_endpoint" "sts" {
   security_group_ids  = [aws_security_group.authorize_inbound_vpc_traffic.id]
 
   tags = {
-    Terraform    = "true"
-    service      = "ROSA"
-    cluster_name = var.cluster_name
     Name         = "sts"
+    service      = "ROSA"
   }
 }
 
@@ -54,10 +67,8 @@ resource "aws_vpc_endpoint" "ecr_api" {
   security_group_ids  = [aws_security_group.authorize_inbound_vpc_traffic.id]
 
   tags = {
-    Terraform    = "true"
-    service      = "ROSA"
-    cluster_name = var.cluster_name
     Name         = "ecr_api"
+    service      = "ROSA"
   }
 }
 
@@ -72,10 +83,8 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   security_group_ids  = [aws_security_group.authorize_inbound_vpc_traffic.id]
 
   tags = {
-    Terraform    = "true"
-    service      = "ROSA"
-    cluster_name = var.cluster_name
     Name         = "ecr_dkr"
+    service      = "ROSA"
   }
 }
 
@@ -90,9 +99,7 @@ resource "aws_vpc_endpoint" "s3" {
   
 
   tags = {
-    Terraform    = "true"
-    service      = "ROSA"
-    cluster_name = var.cluster_name
     Name         = "s3"
+    service      = "ROSA"
   }
 }
