@@ -103,3 +103,18 @@ resource "aws_vpc_endpoint" "s3" {
     service      = "ROSA"
   }
 }
+
+#resource "aws_vpc_endpoint" "secrets_manager" {
+#  service_name      = "com.amazonaws.${var.aws_region}.secretsmanager" 
+#  vpc_id            = data.aws_vpc.get_rosa_vpc.id
+#  vpc_endpoint_type = "Interface"
+
+#  private_dns_enabled = true
+#  subnet_ids          = data.aws_subnets.private_subnets.ids
+#  security_group_ids  = [aws_security_group.authorize_inbound_vpc_traffic.id]
+
+#  tags = {
+#    Name         = "secrets_manager"
+#    service      = "ROSA"
+#  }
+#}
