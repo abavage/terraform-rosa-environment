@@ -4,18 +4,18 @@ resource "aws_key_pair" "ssh_key" {
 }
 
 # Changed to use parameter store
-data "aws_ami" "amazon-linux" {
-  most_recent = true
-  owners      = ["amazon"]
-  filter {
-    name   = "name"
-    values = ["al2023-ami-2023.7.2025*-x86_64"]
-  }
-}
+#data "aws_ami" "amazon-linux" {
+#  most_recent = true
+#  owners      = ["amazon"]
+#  filter {
+#    name   = "name"
+#    values = ["al2023-ami-2023.7.2025*-x86_64"]
+#  }
+#}
 
-output "ami_id" {
-  value = data.aws_ami.amazon-linux.id
-}
+#output "ami_id" {
+#  value = data.aws_ami.amazon-linux.id
+#}
 
 data "aws_ami" "centos" {
   most_recent = true
