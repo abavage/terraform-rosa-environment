@@ -36,3 +36,6 @@ dnf -y install git podman vim jq squid
 systemctl enable --now podman 
 systemctl enable --now squid
 
+dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+systemctl enable --now amazon-ssm-agent
+
