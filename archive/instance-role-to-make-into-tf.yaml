@@ -1,0 +1,22 @@
+# trust policy
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+# managed policy AmazonSSMManagedInstanceCore
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance#http_tokens-1
+# http_tokens: required
+# http_put_response_hop_limit: 1 is default up to 64
+
+# iam_instance_profile: iam role from above go direct to the resource and not a data

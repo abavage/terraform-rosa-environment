@@ -1,0 +1,50 @@
+# https://cloud.redhat.com/experts/rosa/aws-efs/
+
+resource "aws_efs_file_system" "rosa_efs" {
+  #count          = var.enable-efs ? 1 : 0
+  creation_token = "efs-token-1"
+  encrypted      = true
+  tags = {
+    Name = "${var.cluster_name}-rosa-efs"
+  }
+}
+
+resource "aws_efs_mount_target" "efs_mount_worker" {
+  for_each = aws_subnet.rosa_public_subnets
+
+  file_system_id = aws_efs_file_system.rosa_efs.id
+  subnet_id = each.value.id
+
+}
+
+
+
+
+#data "aws_security_groups" "selected" {
+#  filter {
+#    name   = "tag:cluster-name"
+#    values = ["${var.cluster_name}"]
+#  }
+#}
+# # update the default sec group for the default machine pool nodes using a data lookup
+#resource "aws_vpc_security_group_ingress_rule" "enable_efs" {
+#  for_each = var.efs_mount_targets
+#
+#  security_group_id = data.aws_security_groups.selected.id
+#  cidr_ipv4         = try(each.value.subnet_cidr, null)
+#  from_port         = 2049
+#  ip_protocol       = "tcp"
+#  to_port           = 2049
+#}
+#
+# #create a mount target i each subnet
+
+#resource "aws_efs_mount_target" "efs_mount_worker" {
+#  for_each = var.efs_mount_targets
+#
+#  file_system_id = aws_efs_file_system.rosa_efs[0].id
+#  subnet_id      = try(each.value.subnet_id, null)
+#  depends_on = [
+#    module.rhcs_cluster_rosa_hcp
+#  ]
+#}
