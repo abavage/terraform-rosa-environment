@@ -54,7 +54,10 @@ resource "aws_route_table_association" "public" {
 
 ### Detailed explination
 ```
-If var.public is true, Terraform iterates over the aws_subnet.aws_subnet_public map and creates one instance of the resource for each public subnet. If var.public is false, Terraform uses an empty map ({}), resulting in zero instances of the resource being created. This is a best-practice pattern for conditionally creating resources with for_each, because it avoids count indexing issues and ensures Terraform does not evaluate references when the feature is disabled.
+If var.public is true, Terraform iterates over the aws_subnet.aws_subnet_public map and creates one instance of the resource for each public subnet. 
+If var.public is false, Terraform uses an empty map ({}), resulting in zero instances of the resource being created. 
+This is a best-practice pattern for conditionally creating resources with for_each, because it avoids count indexing issues 
+and ensures Terraform does not evaluate references when the feature is disabled.
 
 
 try(aws_route_table.default[0].id, null) safely handles optional resources in Terraform by returning the route table ID when it exists and null when it does not. 
