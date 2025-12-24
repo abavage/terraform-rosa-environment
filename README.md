@@ -62,5 +62,7 @@ and ensures Terraform does not evaluate references when the feature is disabled.
 
 try(aws_route_table.default[0].id, null) safely handles optional resources in Terraform by returning the route table ID when it exists and null when it does not. 
 
-Prevents Terraform from failing with an “invalid index” error when the route table is disabled using count = 0 (with the bool variable in mind). The try() function evaluates expressions in order and suppresses errors, while null tells Terraform to ignore the argument entirely. This pattern is very useful for feature toggles, optional resources, making configurations more robust and future-proof.
+Prevents Terraform from failing with an “invalid index” error when the route table is disabled using count = 0 (with the bool variable in mind). 
+The try() function evaluates expressions in order and suppresses errors, while null tells Terraform to ignore the argument entirely. 
+This pattern is very useful for feature toggles, optional resources, making configurations more robust and future-proof.
 ```
