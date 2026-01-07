@@ -28,6 +28,12 @@ resource "aws_subnet" "aws_subnet_public" {
       Name = join("-", ["rosa-public-subnet", split("-", each.key)[2]])
     }
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
   depends_on = [
     aws_vpc.main
   ]
@@ -47,6 +53,13 @@ resource "aws_subnet" "aws_subnet_private" {
       "kubernetes.io/role/internal-elb" = ""
     }
   )
+
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
+
   depends_on = [
     aws_vpc.main
   ]
@@ -193,65 +206,13 @@ resource "aws_vpc_endpoint" "s3" {
 
 
 ## SSM
-resource "aws_vpc_endpoint" "ssm" {
-  
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.ap-southeast-2.ssm"
-  vpc_endpoint_type = "Interface"
-  subnet_ids         = values(aws_subnet.aws_subnet_private)[*].id
-  security_group_ids = [aws_security_group.vpce.id]
-  private_dns_enabled = true
-
-  tags = {
-    Name    = "ssm"
-  }
-  depends_on = [
-    aws_vpc.main
-  ]
-}
-
-resource "aws_vpc_endpoint" "ec2messages" {
-  
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.ap-southeast-2.ec2messages"
-  vpc_endpoint_type = "Interface"
-  subnet_ids         = values(aws_subnet.aws_subnet_private)[*].id
-  security_group_ids = [aws_security_group.vpce.id]
-  private_dns_enabled = true
-
-  tags = {
-    Name    = "ec2messages"
-  }
-  depends_on = [
-    aws_vpc.main
-  ]
-}
-
-resource "aws_vpc_endpoint" "ssmmessages" {
-  
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.ap-southeast-2.ssmmessages"
-  vpc_endpoint_type = "Interface"
-  subnet_ids         = values(aws_subnet.aws_subnet_private)[*].id
-  security_group_ids = [aws_security_group.vpce.id]
-  private_dns_enabled = true
-
-  tags = {
-    Name    = "ssmmessages"
-  }
-  depends_on = [
-    aws_vpc.main
-  ]
-}
-
-
 resource "aws_security_group" "vpce" {
-  name        = "vpce_common"
+  name        = "vpce-common"
   description = "common 443 port for vpce"
   vpc_id      = aws_vpc.main.id
 
   tags = {
-    Name = "vpce_common"
+    Name = "vpce-common"
   }
   depends_on = [
     aws_vpc.main
@@ -280,28 +241,76 @@ resource "aws_vpc_security_group_egress_rule" "vpce_allow_all" {
   ]
 }
 
+resource "aws_vpc_endpoint" "ssm" {
 
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.ap-southeast-2.ssm"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = values(aws_subnet.aws_subnet_private)[*].id
+  security_group_ids  = [aws_security_group.vpce.id]
+  private_dns_enabled = true
 
+  tags = {
+    Name = "ssm"
+  }
+  depends_on = [
+    aws_security_group.vpce
+  ]
+}
+
+resource "aws_vpc_endpoint" "ec2messages" {
+
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.ap-southeast-2.ec2messages"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = values(aws_subnet.aws_subnet_private)[*].id
+  security_group_ids  = [aws_security_group.vpce.id]
+  private_dns_enabled = true
+
+  tags = {
+    Name = "ec2messages"
+  }
+  depends_on = [
+    aws_security_group.vpce
+  ]
+}
+
+resource "aws_vpc_endpoint" "ssmmessages" {
+
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.ap-southeast-2.ssmmessages"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = values(aws_subnet.aws_subnet_private)[*].id
+  security_group_ids  = [aws_security_group.vpce.id]
+  private_dns_enabled = true
+
+  tags = {
+    Name = "ssmmessages"
+  }
+  depends_on = [
+    aws_security_group.vpce
+  ]
+}
 
 ########
 
 resource "aws_security_group" "authorize_inbound_vpc_traffic" {
-  vpc_id = aws_vpc.main.id
-  name   = "private-cluster-vpce"
+  vpc_id      = aws_vpc.main.id
+  name        = "private-cluster-vpce"
   description = "security grroup for private cluster vpce"
 
   tags = {
-    service      = "ROSA"
-    Name         = "private-cluster-vpce"
+    service = "ROSA"
+    Name    = "private-cluster-vpce"
   }
-   
+
 }
 
 # Ingress rules (one per subnet CIDR from the map)
 resource "aws_vpc_security_group_ingress_rule" "allow_inbound_from_private_subnets" {
   for_each          = var.aws_subnet_private
   security_group_id = aws_security_group.authorize_inbound_vpc_traffic.id
-  cidr_ipv4         = each.value   # map value is the CIDR block
+  cidr_ipv4         = each.value # map value is the CIDR block
   ip_protocol       = "-1"
   #from_port         = 0
   #to_port           = 0
@@ -310,10 +319,10 @@ resource "aws_vpc_security_group_ingress_rule" "allow_inbound_from_private_subne
   description = "Allow from ${each.key}"
 
   tags = {
-    service      = "ROSA"
-    Name         = "private-cluster-vpce-ingress-${each.key}"
+    service = "ROSA"
+    Name    = "private-cluster-vpce-ingress-${each.key}"
   }
-  
+
 }
 
 # Egress rule (allow all outbound traffic)
@@ -323,8 +332,8 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_egress" {
   ip_protocol       = "-1" # all traffic
 
   tags = {
-    service      = "ROSA"
-    Name         = "private-cluster-vpce-egress"
+    service = "ROSA"
+    Name    = "private-cluster-vpce-egress"
   }
 
 }

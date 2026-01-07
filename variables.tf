@@ -75,3 +75,8 @@ variable "rdp_password" {
   type        = string
   default     = "The.Strong-Password123!"
 }
+
+variable "linux_instance_count" {
+  type    = number
+  default = null
+}

@@ -9,11 +9,11 @@
 
 
 resource "aws_security_group" "windows" {
-  name   = "windows_ec2_common"
+  name   = "windows-ec2-common"
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "windows_ec2_common"
+    Name = "windows-ec2-common"
   }
 }
 
@@ -24,6 +24,7 @@ resource "aws_vpc_security_group_egress_rule" "all" {
 }
 
 
+resource "random_pet" "windows_instance_name" {}
 
 resource "aws_instance" "ec2_windows" {
   count = var.deploy_windows_instance ? 1 : 0
@@ -73,7 +74,8 @@ resource "aws_instance" "ec2_windows" {
   tags = merge(
     var.tags,
     {
-      Name = "${var.ec2_windows_bastion_name}-${count.index}"
+      #Name = "${var.ec2_windows_bastion_name}-${count.index}"
+      Name = "${var.ec2_windows_bastion_name}-${random_pet.windows_instance_name.id}"
     }
   )
 

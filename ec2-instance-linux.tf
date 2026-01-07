@@ -1,10 +1,10 @@
 resource "aws_security_group" "common" {
-  name        = "linux_ec2_common"
+  name        = "linux-ec2-common"
   description = "common ingress port to ec2 hosts"
   vpc_id      = aws_vpc.main.id
 
   tags = {
-    Name = "linux_ec2_common"
+    Name = "linux-ec2-common"
   }
   depends_on = [
     aws_vpc.main
@@ -40,7 +40,15 @@ resource "aws_key_pair" "ssh_key" {
   public_key = file("~/.ssh/one_id_rsa.pub")
 }
 
+resource "random_pet" "linux_instance_name" {
+  for_each = toset([
+    for i in range(var.linux_instance_count) : tostring(i)
+  ])
+}
+
 resource "aws_instance" "ec2_linux" {
+  for_each = random_pet.linux_instance_name
+
   ami                         = data.aws_ami.centos.id
   subnet_id                   = var.ec2_bastion_public_source_subnet ? tolist(data.aws_subnets.public_subnets.ids)[0] : tolist(data.aws_subnets.private_subnets.ids)[0]
   vpc_security_group_ids      = [aws_security_group.common.id]
@@ -55,19 +63,25 @@ resource "aws_instance" "ec2_linux" {
     http_tokens   = "optional"
     http_endpoint = "enabled"
   }
-  count = 1
+  #count = 0
   tags = merge(
     var.tags,
     {
-      Name = "${var.ec2_linux_bastion_name}-${count.index}"
+      #Name = "${var.ec2_linux_bastion_name}-${count.index}"
+      #Name = "${var.ec2_linux_bastion_name}-${random_pet.linux_instance_name.id}"
+      #Name = each.value.id
+      Name = "${var.ec2_linux_bastion_name}-${each.value.id}"
     }
   )
   user_data                   = file("${path.module}/userdata/common.sh")
   user_data_replace_on_change = true
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = [
+      tags
+    ]
   }
+
   depends_on = [
     aws_route_table_association.public,
     aws_route_table_association.private
