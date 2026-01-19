@@ -22,7 +22,7 @@ tags = {
   "env" : "nonprod"
 }
 
-ec2_bastion_public_source_subnet = false # instance into a private subnet
+ec2_bastion_public_source_subnet = true # instance into a private subnet
 ec2_linux_bastion_name           = "centos9"
 linux_instance_count             = 1
 ec2_windows_bastion_name         = "windows25"
