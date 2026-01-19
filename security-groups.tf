@@ -12,8 +12,6 @@ resource "aws_security_group" "rds" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "rds_ingress_rules" {
-  for_each = var.common_ec2_sg_rules
-
   security_group_id = aws_security_group.rds.id
   from_port         = 5432
   to_port           = 5432
