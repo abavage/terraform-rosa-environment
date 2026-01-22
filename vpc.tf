@@ -311,9 +311,9 @@ resource "aws_vpc_security_group_ingress_rule" "allow_inbound_from_private_subne
   for_each          = var.aws_subnet_private
   security_group_id = aws_security_group.authorize_inbound_vpc_traffic.id
   cidr_ipv4         = each.value # map value is the CIDR block
-  ip_protocol       = "-1"
-  #from_port         = 0
-  #to_port           = 0
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
 
   # Optional: keep track of which AZ created this rule
   description = "Allow from ${each.key}"

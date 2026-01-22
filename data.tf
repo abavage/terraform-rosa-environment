@@ -2,6 +2,16 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
+#data "aws_vpc" "get_rosa_vpc" {
+#  filter {
+#    name   = "tag:Name"
+#    values = ["rosa_public"]
+#  }
+#  depends_on = [
+#    aws_vpc.main
+#  ]
+#}
+
 data "aws_subnets" "public_subnets" {
   filter {
     name   = "vpc-id"

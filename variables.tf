@@ -80,3 +80,9 @@ variable "linux_instance_count" {
   type    = number
   default = null
 }
+
+variable "create_vpce_private_rosa_cluster" {
+  type        = bool
+  description = "create all the required vpce's for a private rosa cluster"
+  default     = false
+}
