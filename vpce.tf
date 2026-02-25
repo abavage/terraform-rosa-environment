@@ -1,5 +1,5 @@
 resource "aws_vpc_endpoint" "sts" {
-  count = var.create_vpce_private_rosa_cluster ? 1 : 0
+  #count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
   service_name      = "com.amazonaws.${var.aws_region}.sts"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id

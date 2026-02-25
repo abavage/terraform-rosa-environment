@@ -52,7 +52,7 @@ resource "aws_instance" "ec2_linux" {
   ami                         = data.aws_ami.centos.id
   subnet_id                   = var.ec2_bastion_public_source_subnet ? tolist(data.aws_subnets.public_subnets.ids)[0] : tolist(data.aws_subnets.private_subnets.ids)[0]
   vpc_security_group_ids      = [aws_security_group.common.id]
-  instance_type               = "t3.micro"
+  instance_type               = "t3.small"
   key_name                    = aws_key_pair.ssh_key.key_name
   iam_instance_profile        = aws_iam_instance_profile.ec2_instance_role.name
   associate_public_ip_address = var.ec2_bastion_public_source_subnet ? true : false

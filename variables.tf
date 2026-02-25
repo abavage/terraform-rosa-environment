@@ -14,12 +14,22 @@ variable "aws_subnet_public" {
   type        = map(string)
   description = "aws subnet public cidr and subnet"
   nullable    = false
+
+  validation {
+    condition     = alltrue([for c in values(var.aws_subnet_public) : can(cidrnetmask(c))])
+    error_message = "All values in aws_subnet_public must be valid IPv4 CIDR blocks."
+  }
 }
 
 variable "aws_subnet_private" {
   type        = map(string)
   description = "aws subnet private cidr and subnet"
   nullable    = false
+
+  validation {
+    condition     = alltrue([for c in values(var.aws_subnet_private) : can(cidrnetmask(c))])
+    error_message = "All values in aws_subnet_private must be valid IPv4 CIDR blocks."
+  }
 }
 
 variable "tags" {

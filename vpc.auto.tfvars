@@ -1,6 +1,6 @@
 # public = true
 
-create_vpce_private_rosa_cluster = "false"
+create_vpce_private_rosa_cluster = false
 
 aws_region = "ap-southeast-2"
 
