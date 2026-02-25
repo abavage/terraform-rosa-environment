@@ -8,13 +8,22 @@ The windows ec2 instance is deployed by default in a private subnet. It has an e
 ```
 $ brew install session-manager-plugin
 
-$ aws ssm start-session --target <instance_id> --document-name AWS-StartPortForwardingSession --parameters '{"portNumber":["3389"],"localPortNumber":["13389"]}'
+$ aws ssm start-session --target <instance_id> --document-name AWS-StartPortForwardingSession --parameters '{"portNumber":["3389"],"localPortNumber":["13389"]}' &
 
 # From an RDP Client
 
 server: localhost:13389
 user: admin
 password: The.Strong-Password123!
+```
+
+```
+ssh to linux instance
+
+$ aws ssm start-session --target <instance_id> --document-name AWS-StartPortForwardingSession --parameters '{"portNumber":["22"],"localPortNumber":["42222"]}' &
+
+$ ssh -i .ssh/somekey_rsa ec2-user@127.0.0.1 -p 42222
+
 ```
 
 ### Overriding username and password

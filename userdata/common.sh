@@ -30,7 +30,7 @@ mv /home/ec2-user/bin/linux-amd64/helm /home/ec2-user/bin/
 chown -R ec2-user:ec2-user /home/ec2-user/bin
 chown -R ec2-user:ec2-user /home/ec2-user/.aws
 
-dnf -y install git podman vim jq squid sysstat awscli net-tools bind-utils
+dnf -y install git podman vim jq squid sysstat awscli net-tools bind-utils postgresql
 
 systemctl enable --now podman 
 systemctl enable --now squid
