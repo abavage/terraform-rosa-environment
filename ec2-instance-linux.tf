@@ -35,6 +35,54 @@ resource "aws_vpc_security_group_egress_rule" "allow_all" {
   ]
 }
 
+##### ALB SG
+resource "aws_security_group" "alb_common" {
+  name        = "alb-common"
+  description = "common ingress for ALB"
+  vpc_id      = aws_vpc.main.id
+
+  tags = {
+    Name = "alb-common"
+  }
+  depends_on = [
+    aws_vpc.main
+  ]
+}
+
+resource "aws_vpc_security_group_ingress_rule" "alb_rules_80" {
+  security_group_id = aws_security_group.alb_common.id
+  from_port         = 80
+  to_port           = 80
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "tcp"
+
+  depends_on = [
+    aws_security_group.common
+  ]
+}
+
+resource "aws_vpc_security_group_ingress_rule" "alb_rules_443" {
+  security_group_id = aws_security_group.alb_common.id
+  from_port         = 443
+  to_port           = 443
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "tcp"
+
+  depends_on = [
+    aws_security_group.common
+  ]
+}
+
+resource "aws_vpc_security_group_egress_rule" "alb_allow_all" {
+  security_group_id = aws_security_group.alb_common.id
+  ip_protocol       = "-1"
+  cidr_ipv4         = "0.0.0.0/0"
+
+  depends_on = [
+    aws_security_group.common
+  ]
+}
+
 resource "aws_key_pair" "ssh_key" {
   key_name   = "one"
   public_key = file("~/.ssh/one_id_rsa.pub")

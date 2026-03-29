@@ -1,6 +1,6 @@
 # public = true
 
-create_vpce_private_rosa_cluster = false
+create_vpce_private_rosa_cluster = true
 
 aws_region = "ap-southeast-2"
 
@@ -24,11 +24,11 @@ tags = {
   "env" : "nonprod"
 }
 
-ec2_bastion_public_source_subnet = false # linux instance into a pubic subnet
+ec2_bastion_public_source_subnet = true # linux instance into a pubic subnet public=true private=false
 ec2_linux_bastion_name           = "centos9"
 linux_instance_count             = 1
 ec2_windows_bastion_name         = "windows25"
-deploy_windows_instance          = true
+deploy_windows_instance          = false
 
 
 common_ec2_sg_rules = {
