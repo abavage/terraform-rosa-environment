@@ -1,5 +1,5 @@
 resource "aws_vpc_endpoint" "sts" {
-  #count = var.create_vpce_private_rosa_cluster ? 1 : 0
+  count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
   service_name      = "com.amazonaws.${var.aws_region}.sts"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
@@ -9,12 +9,11 @@ resource "aws_vpc_endpoint" "sts" {
   private_dns_enabled = true
   subnet_ids          = data.aws_subnets.private_subnets.ids
   security_group_ids = [
-    aws_security_group.authorize_inbound_vpc_traffic.id
+    aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   ]
 
   tags = {
-    Name    = "sts"
-    service = "ROSA"
+    Name    = "sts.${var.vpc_name}"
   }
 }
 
@@ -29,12 +28,11 @@ resource "aws_vpc_endpoint" "ecr_api" {
   private_dns_enabled = true
   subnet_ids          = data.aws_subnets.private_subnets.ids
   security_group_ids = [
-    aws_security_group.authorize_inbound_vpc_traffic.id
+    aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   ]
 
   tags = {
-    Name    = "ecr_api"
-    service = "ROSA"
+    Name    = "ecr_api.${var.vpc_name}"
   }
 }
 
@@ -50,12 +48,11 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   private_dns_enabled = true
   subnet_ids          = data.aws_subnets.private_subnets.ids
   security_group_ids = [
-    aws_security_group.authorize_inbound_vpc_traffic.id
+    aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   ]
 
   tags = {
-    Name    = "ecr_dkr"
-    service = "ROSA"
+    Name    = "ecr_dkr.${var.vpc_name}"
   }
 }
 
@@ -71,12 +68,11 @@ resource "aws_vpc_endpoint" "ec2" {
   private_dns_enabled = true
   subnet_ids          = data.aws_subnets.private_subnets.ids
   security_group_ids = [
-    aws_security_group.authorize_inbound_vpc_traffic.id
+    aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   ]
 
   tags = {
-    Name    = "ec2"
-    service = "ROSA"
+    Name    = "ec2.${var.vpc_name}"
   }
 }
 
@@ -91,12 +87,11 @@ resource "aws_vpc_endpoint" "elasticloadbalancing" {
   private_dns_enabled = true
   subnet_ids          = data.aws_subnets.private_subnets.ids
   security_group_ids = [
-    aws_security_group.authorize_inbound_vpc_traffic.id
+    aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   ]
 
   tags = {
-    Name    = "elasticloadbalancing"
-    service = "ROSA"
+    Name    = "elasticloadbalancing.${var.vpc_name}"
   }
 }
 
@@ -111,12 +106,11 @@ resource "aws_vpc_endpoint" "tagging" {
   private_dns_enabled = true
   subnet_ids          = data.aws_subnets.private_subnets.ids
   security_group_ids = [
-    aws_security_group.authorize_inbound_vpc_traffic.id
+    aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   ]
 
   tags = {
-    Name    = "tagging"
-    service = "ROSA"
+    Name    = "tagging.${var.vpc_name}"
   }
 }
 
@@ -131,12 +125,11 @@ resource "aws_vpc_endpoint" "servicequotas" {
   private_dns_enabled = true
   subnet_ids          = data.aws_subnets.private_subnets.ids
   security_group_ids = [
-    aws_security_group.authorize_inbound_vpc_traffic.id
+    aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   ]
 
   tags = {
-    Name    = "servicequotas"
-    service = "ROSA"
+    Name    = "servicequotas.${var.vpc_name}"
   }
 }
 
@@ -151,12 +144,11 @@ resource "aws_vpc_endpoint" "kms" {
   private_dns_enabled = true
   subnet_ids          = data.aws_subnets.private_subnets.ids
   security_group_ids = [
-    aws_security_group.authorize_inbound_vpc_traffic.id
+    aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   ]
 
   tags = {
-    Name    = "kms"
-    service = "ROSA"
+    Name    = "kms.${var.vpc_name}"
   }
 }
 
@@ -180,8 +172,7 @@ resource "aws_vpc_endpoint" "iam" {
   #]
 
   tags = {
-    Name    = "iam"
-    service = "ROSA"
+    Name    = "iam.${var.vpc_name}"
   }
 }
 
@@ -201,7 +192,6 @@ resource "aws_vpc_endpoint" "route53" {
   #]
 
   tags = {
-    Name    = "route53"
-    service = "ROSA"
+    Name    = "route53.${var.vpc_name}"
   }
 }

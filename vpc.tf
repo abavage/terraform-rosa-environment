@@ -53,7 +53,6 @@ resource "aws_subnet" "aws_subnet_private" {
       "kubernetes.io/role/internal-elb" = ""
     }
   )
-
   lifecycle {
     ignore_changes = [
       tags
@@ -72,7 +71,7 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "main"
+    Name = "main.${var.vpc_name}"
   }
   depends_on = [
     aws_vpc.main
@@ -91,7 +90,7 @@ resource "aws_route_table" "default" {
   }
 
   tags = {
-    Name = "default-public"
+    Name = "default-public.${var.vpc_name}"
   }
   depends_on = [
     aws_internet_gateway.gw
@@ -146,6 +145,10 @@ resource "aws_nat_gateway" "nat" {
   vpc_id = aws_vpc.main.id
   availability_mode = "regional"
 
+  tags = {
+    Name = "nat-gateway.${var.vpc_name}"
+  }
+
   depends_on = [
     #aws_eip.nat,
     aws_route_table_association.public,
@@ -166,7 +169,6 @@ resource "aws_route_table" "nat" {
     #nat_gateway_id = aws_nat_gateway.nat[each.key].id
     nat_gateway_id = aws_nat_gateway.nat.id
   }
-
   tags = {
     Name = join("-", ["rosa-nat-gateway-private", split("-", each.key)[2]])
   }
@@ -198,7 +200,7 @@ resource "aws_vpc_endpoint" "s3" {
   route_table_ids = local.route_tables
 
   tags = {
-    Name    = "s3"
+    Name    = "s3.${var.vpc_name}"
     service = "ROSA"
   }
   depends_on = [
@@ -215,7 +217,7 @@ resource "aws_security_group" "vpce" {
   vpc_id      = aws_vpc.main.id
 
   tags = {
-    Name = "vpce-common"
+    Name = "vpce-common.${var.vpc_name}"
   }
   depends_on = [
     aws_vpc.main
@@ -254,7 +256,7 @@ resource "aws_vpc_endpoint" "ssm" {
   private_dns_enabled = true
 
   tags = {
-    Name = "ssm"
+    Name = "ssm.${var.vpc_name}"
   }
   depends_on = [
     aws_security_group.vpce
@@ -271,7 +273,7 @@ resource "aws_vpc_endpoint" "ec2messages" {
   private_dns_enabled = true
 
   tags = {
-    Name = "ec2messages"
+    Name = "ec2messages.${var.vpc_name}"
   }
   depends_on = [
     aws_security_group.vpce
@@ -288,7 +290,7 @@ resource "aws_vpc_endpoint" "ssmmessages" {
   private_dns_enabled = true
 
   tags = {
-    Name = "ssmmessages"
+    Name = "ssmmessages.${var.vpc_name}"
   }
   depends_on = [
     aws_security_group.vpce
@@ -298,21 +300,24 @@ resource "aws_vpc_endpoint" "ssmmessages" {
 ########
 
 resource "aws_security_group" "authorize_inbound_vpc_traffic" {
+  count = var.create_vpce_private_rosa_cluster ? 1 : 0
+
   vpc_id      = aws_vpc.main.id
   name        = "private-cluster-vpce"
   description = "security grroup for private cluster vpce"
 
   tags = {
-    service = "ROSA"
-    Name    = "private-cluster-vpce"
+    Name    = "private-cluster-vpce.${var.vpc_name}"
   }
 
 }
 
 # Ingress rules (one per subnet CIDR from the map)
 resource "aws_vpc_security_group_ingress_rule" "allow_inbound_from_private_subnets" {
-  for_each          = var.aws_subnet_private
-  security_group_id = aws_security_group.authorize_inbound_vpc_traffic.id
+  for_each = var.create_vpce_private_rosa_cluster ? var.aws_subnet_private : {}
+  #for_each          = var.aws_subnet_private
+
+  security_group_id = aws_security_group.authorize_inbound_vpc_traffic[0].id
   cidr_ipv4         = each.value # map value is the CIDR block
   ip_protocol       = "tcp"
   from_port         = 443
@@ -320,23 +325,24 @@ resource "aws_vpc_security_group_ingress_rule" "allow_inbound_from_private_subne
 
   # Optional: keep track of which AZ created this rule
   description = "Allow from ${each.key}"
-
-  tags = {
-    service = "ROSA"
-    Name    = "private-cluster-vpce-ingress-${each.key}"
-  }
+  #tags = {
+  #  service = "ROSA"
+  #  Name    = "private-cluster-vpce-ingress-${each.key}"
+  #}
 
 }
 
 # Egress rule (allow all outbound traffic)
 resource "aws_vpc_security_group_egress_rule" "allow_all_egress" {
-  security_group_id = aws_security_group.authorize_inbound_vpc_traffic.id
+  count = var.create_vpce_private_rosa_cluster ? 1 : 0
+
+  security_group_id = aws_security_group.authorize_inbound_vpc_traffic[count.index].id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1" # all traffic
 
-  tags = {
-    service = "ROSA"
-    Name    = "private-cluster-vpce-egress"
-  }
+  #tags = {
+  # service = "ROSA"
+  #  Name    = "private-cluster-vpce-egress"
+  #}
 
 }

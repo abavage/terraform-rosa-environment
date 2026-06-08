@@ -1,6 +1,6 @@
 resource "aws_security_group" "common" {
   name        = "linux-ec2-common"
-  description = "common ingress port to ec2 hosts"
+  description = "common ingress port to linux ec2 hosts"
   vpc_id      = aws_vpc.main.id
 
   tags = {

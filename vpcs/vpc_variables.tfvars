@@ -5,7 +5,8 @@ vpc_name = "rosa_public"
 public_subnet_name = "rosa-public-subnet"
 private_subnet_name = "rosa-private-subnet"
 
-create_vpce_private_rosa_cluster = true
+# creates all the VPCE and the SG for a private cluster
+create_vpce_private_rosa_cluster = false
 
 aws_region = "ap-southeast-2"
 

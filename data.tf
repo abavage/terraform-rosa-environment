@@ -2,16 +2,6 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
-#data "aws_vpc" "get_rosa_vpc" {
-#  filter {
-#    name   = "tag:Name"
-#    values = ["rosa_public"]
-#  }
-#  depends_on = [
-#    aws_vpc.main
-#  ]
-#}
-
 data "aws_subnets" "public_subnets" {
   filter {
     name   = "vpc-id"
@@ -19,7 +9,7 @@ data "aws_subnets" "public_subnets" {
   }
 
   tags = {
-    Name = "rosa-public-subnet*"
+    Name = "${var.public_subnet_name}*"
   }
   depends_on = [
     aws_subnet.aws_subnet_public
@@ -31,9 +21,9 @@ data "aws_subnets" "private_subnets" {
     name   = "vpc-id"
     values = [aws_vpc.main.id]
   }
-
+  
   tags = {
-    Name = "rosa-private-subnet*"
+    Name = "${var.private_subnet_name}*"
   }
   depends_on = [
     aws_subnet.aws_subnet_private
