@@ -79,6 +79,12 @@ variable "ec2_linux_bastion_name" {
   default     = null
 }
 
+variable "ec2_linux_bastion_ssh_key" {
+  type = string
+  description = "ssh key name to access the ec2 instance full path to the local file ~/.ssh/somefile.pub "
+  default = null
+}
+
 variable "ec2_windows_bastion_name" {
   type        = string
   description = "name tpo add to the windows bastion host"

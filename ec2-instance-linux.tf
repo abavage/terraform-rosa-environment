@@ -85,7 +85,8 @@ resource "aws_vpc_security_group_egress_rule" "alb_allow_all" {
 
 resource "aws_key_pair" "ssh_key" {
   key_name   = "one"
-  public_key = file("~/.ssh/one_id_rsa.pub")
+  #public_key = file("~/.ssh/one_id_rsa.pub") ec2_linux_bastion_key
+  public_key = file(var.ec2_linux_bastion_ssh_key)
 }
 
 resource "random_pet" "linux_instance_name" {
