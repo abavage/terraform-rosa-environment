@@ -1,5 +1,15 @@
 # Network Setup
 
+## Configuring multiple VPC's
+Individual VPC's can be configured with this moule.
+
+```
+terraform plan -var-file="vpcs/vpc_variables.tfvars"
+terraform apply -var-file="vpcs/vpc_variables.tfvars"
+terraform destroy -var-file="vpcs/vpc_variables.tfvars"
+```
+
+
 ## Required Setup for ROSA clusters
 
 ### Connecting to the Windows instance in a Private Subnet

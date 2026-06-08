@@ -1,3 +1,20 @@
+variable "vpc_name" {
+  type = string
+  description = "Name of the vpc"
+  default = null
+}
+
+variable "public_subnet_name" {
+  type = string
+  description = "Name for the public subnets"
+  default = null
+}
+
+variable "private_subnet_name" {
+  type = string
+  description = "Name for the provate subnets"
+  default = null
+}
 variable "aws_region" {
   type        = string
   description = "aws region"

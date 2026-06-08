@@ -1,5 +1,10 @@
 # public = true
 
+vpc_name = "rosa_public"
+
+public_subnet_name = "rosa-public-subnet"
+private_subnet_name = "rosa-private-subnet"
+
 create_vpce_private_rosa_cluster = true
 
 aws_region = "ap-southeast-2"
@@ -24,7 +29,7 @@ tags = {
   "env" : "nonprod"
 }
 
-ec2_bastion_public_source_subnet = true # linux instance into a pubic subnet public=true private=false
+ec2_bastion_public_source_subnet = false # linux instance into a pubic subnet public=true private=false
 ec2_linux_bastion_name           = "centos9"
 linux_instance_count             = 1
 ec2_windows_bastion_name         = "windows25"

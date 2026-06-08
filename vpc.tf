@@ -7,7 +7,7 @@ resource "aws_vpc" "main" {
   tags = merge(
     var.tags,
     {
-      Name = "rosa_public"
+      Name = var.vpc_name
     }
   )
 
@@ -25,7 +25,7 @@ resource "aws_subnet" "aws_subnet_public" {
   tags = merge(
     var.tags,
     {
-      Name = join("-", ["rosa-public-subnet", split("-", each.key)[2]])
+      Name = join("-", [var.public_subnet_name, split("-", each.key)[2]])
     }
   )
 
@@ -49,7 +49,7 @@ resource "aws_subnet" "aws_subnet_private" {
   tags = merge(
     var.tags,
     {
-      Name                              = join("-", ["rosa-private-subnet", split("-", each.key)[2]])
+      Name                              = join("-", [var.private_subnet_name, split("-", each.key)[2]])
       "kubernetes.io/role/internal-elb" = ""
     }
   )
@@ -114,38 +114,40 @@ resource "aws_route_table_association" "public" {
 
 
 ### EIP
-resource "aws_eip" "nat" {
-  for_each = aws_subnet.aws_subnet_public
+#resource "aws_eip" "nat" {
+#  for_each = aws_subnet.aws_subnet_public
   #for_each = var.public ? aws_subnet.aws_subnet_public : {}
 
-  domain = "vpc"
+#  domain = "vpc"
 
-  tags = {
-    Name = "nat-gateway-rosa-public-subnet"
-  }
+#  tags = {
+#    Name = "nat-gateway-rosa-public-subnet"
+#  }
 
-  depends_on = [
-    aws_vpc.main
-  ]
-}
+#  depends_on = [
+#    aws_vpc.main
+#  ]
+#}
 
 ### NAT Gateway
 resource "aws_nat_gateway" "nat" {
-  for_each = aws_subnet.aws_subnet_public
-  #for_each = var.public ? aws_subnet.aws_subnet_public : {}
+  #for_each = aws_subnet.aws_subnet_public
 
-  subnet_id     = each.value.id
-  allocation_id = aws_eip.nat[each.key].id
+  #subnet_id     = each.value.id
+  #allocation_id = aws_eip.nat[each.key].id
 
-  tags = merge(
-    var.tags,
-    {
-      Name = join("-", ["rosa-public-subnet", split("-", each.key)[2]])
-    }
-  )
+  #tags = merge(
+  #  var.tags,
+  #  {
+  #    Name = join("-", ["rosa-public-subnet", split("-", each.key)[2]])
+  #  }
+  #)
+
+  vpc_id = aws_vpc.main.id
+  availability_mode = "regional"
 
   depends_on = [
-    aws_eip.nat,
+    #aws_eip.nat,
     aws_route_table_association.public,
     aws_subnet.aws_subnet_public
   ]
@@ -161,7 +163,8 @@ resource "aws_route_table" "nat" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat[each.key].id
+    #nat_gateway_id = aws_nat_gateway.nat[each.key].id
+    nat_gateway_id = aws_nat_gateway.nat.id
   }
 
   tags = {
