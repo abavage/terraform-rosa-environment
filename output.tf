@@ -1,8 +1,8 @@
-output "private_subnets" {
+output "private_aws_subnet_ids" {
   value = data.aws_subnets.private_subnets.ids
 }
 
-output "public_subnets" {
+output "public_aws_subnet_ids" {
   #value = data.aws_subnets.public_subnets.ids[0]
   value = try(data.aws_subnets.public_subnets.ids[0], null)
 
