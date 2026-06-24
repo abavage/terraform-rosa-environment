@@ -107,12 +107,16 @@ resource "aws_instance" "ec2_linux" {
   associate_public_ip_address = var.ec2_bastion_public_source_subnet ? true : false
   root_block_device {
     volume_size = "15"
+    delete_on_termination = true
+    volume_type = "gp3"
+    encrypted = true
   }
   metadata_options {
     http_tokens   = "optional"
     http_endpoint = "enabled"
   }
   #count = 0
+
   tags = merge(
     var.tags,
     {

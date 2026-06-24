@@ -70,6 +70,6 @@ data "aws_ami" "windows" {
 
   filter {
     name   = "name"
-    values = ["Windows_Server-2025-English-Full-Base-2026.03*"]
+    values = ["Windows_Server-2025-English-Full-Base-2026.04*"]
   }
 }

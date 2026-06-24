@@ -346,3 +346,13 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_egress" {
   #}
 
 }
+
+## Clean up orphanded SG
+resource "null_resource" "clean_up" {
+  depends_on = [ aws_vpc.main ]
+
+  provisioner "local-exec" {
+    when = destroy
+    command = "bash scripts/security-group-cleanup.sh"
+  }
+}

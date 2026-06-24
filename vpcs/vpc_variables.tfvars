@@ -33,7 +33,7 @@ tags = {
 ec2_bastion_public_source_subnet = false # linux instance into a pubic subnet public=true private=false
 ec2_linux_bastion_name           = "centos9"
 linux_instance_count             = 1
-ec2_linux_bastion_ssh_key            = "~/.ssh/one_id_rsa.pub"
+ec2_linux_bastion_ssh_key        = "~/.ssh/one_id_rsa.pub"
 ec2_windows_bastion_name         = "windows25"
 deploy_windows_instance          = false
 

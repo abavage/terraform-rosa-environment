@@ -30,10 +30,15 @@ mv /home/ec2-user/bin/linux-amd64/helm /home/ec2-user/bin/
 chown -R ec2-user:ec2-user /home/ec2-user/bin
 chown -R ec2-user:ec2-user /home/ec2-user/.aws
 
-dnf -y install git podman vim jq squid sysstat awscli net-tools bind-utils postgresql nmap-ncat epel-release
+dnf -y install git podman vim jq squid sysstat awscli net-tools bind-utils postgresql nmap-ncat epel-release httpd firewalld
 
 systemctl enable --now podman 
 #systemctl enable --now squid
+systemctl enable --now httpd
+systemctl enable --now firewalld
+
+firewall-cmd --permanent --add-service=http
+firewall-cmd --reload
 
 dnf install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
 systemctl enable --now amazon-ssm-agent
