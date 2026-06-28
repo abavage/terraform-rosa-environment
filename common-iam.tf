@@ -14,6 +14,9 @@ resource "aws_iam_role" "ec2_system_manager_instance_role" {
       }
     ]
   })
+  tags = {
+    ssmInstanceRole = true
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_system_manager_instance_role_attachment" {

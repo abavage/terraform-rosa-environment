@@ -1,7 +1,7 @@
 resource "aws_vpc_endpoint" "sts" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.${var.aws_region}.sts"
+  service_name = "com.amazonaws.${var.aws_region}.sts"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
@@ -13,14 +13,14 @@ resource "aws_vpc_endpoint" "sts" {
   ]
 
   tags = {
-    Name    = "sts.${var.vpc_name}"
+    Name = "sts.${var.vpc_name}"
   }
 }
 
 resource "aws_vpc_endpoint" "ecr_api" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.${var.aws_region}.ecr.api"
+  service_name = "com.amazonaws.${var.aws_region}.ecr.api"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
@@ -32,7 +32,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   ]
 
   tags = {
-    Name    = "ecr_api.${var.vpc_name}"
+    Name = "ecr_api.${var.vpc_name}"
   }
 }
 
@@ -40,7 +40,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
 resource "aws_vpc_endpoint" "ecr_dkr" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.${var.aws_region}.ecr.dkr"
+  service_name = "com.amazonaws.${var.aws_region}.ecr.dkr"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
@@ -52,7 +52,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   ]
 
   tags = {
-    Name    = "ecr_dkr.${var.vpc_name}"
+    Name = "ecr_dkr.${var.vpc_name}"
   }
 }
 
@@ -60,7 +60,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 resource "aws_vpc_endpoint" "ec2" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.${var.aws_region}.ec2"
+  service_name = "com.amazonaws.${var.aws_region}.ec2"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
@@ -72,14 +72,14 @@ resource "aws_vpc_endpoint" "ec2" {
   ]
 
   tags = {
-    Name    = "ec2.${var.vpc_name}"
+    Name = "ec2.${var.vpc_name}"
   }
 }
 
 resource "aws_vpc_endpoint" "elasticloadbalancing" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.${var.aws_region}.elasticloadbalancing"
+  service_name = "com.amazonaws.${var.aws_region}.elasticloadbalancing"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
@@ -91,14 +91,14 @@ resource "aws_vpc_endpoint" "elasticloadbalancing" {
   ]
 
   tags = {
-    Name    = "elasticloadbalancing.${var.vpc_name}"
+    Name = "elasticloadbalancing.${var.vpc_name}"
   }
 }
 
 resource "aws_vpc_endpoint" "tagging" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.${var.aws_region}.tagging"
+  service_name = "com.amazonaws.${var.aws_region}.tagging"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
@@ -110,14 +110,14 @@ resource "aws_vpc_endpoint" "tagging" {
   ]
 
   tags = {
-    Name    = "tagging.${var.vpc_name}"
+    Name = "tagging.${var.vpc_name}"
   }
 }
 
 resource "aws_vpc_endpoint" "servicequotas" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.${var.aws_region}.servicequotas"
+  service_name = "com.amazonaws.${var.aws_region}.servicequotas"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
@@ -129,14 +129,14 @@ resource "aws_vpc_endpoint" "servicequotas" {
   ]
 
   tags = {
-    Name    = "servicequotas.${var.vpc_name}"
+    Name = "servicequotas.${var.vpc_name}"
   }
 }
 
 resource "aws_vpc_endpoint" "kms" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.${var.aws_region}.kms"
+  service_name = "com.amazonaws.${var.aws_region}.kms"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
@@ -148,7 +148,7 @@ resource "aws_vpc_endpoint" "kms" {
   ]
 
   tags = {
-    Name    = "kms.${var.vpc_name}"
+    Name = "kms.${var.vpc_name}"
   }
 }
 
@@ -159,11 +159,11 @@ resource "aws_vpc_endpoint" "kms" {
 resource "aws_vpc_endpoint" "iam" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.iam"
+  service_name = "com.amazonaws.iam"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
-  service_region = "us-east-1"
+  service_region    = "us-east-1"
 
   #private_dns_enabled = true
   #subnet_ids          = data.aws_subnets.private_subnets.ids
@@ -172,18 +172,18 @@ resource "aws_vpc_endpoint" "iam" {
   #]
 
   tags = {
-    Name    = "iam.${var.vpc_name}"
+    Name = "iam.${var.vpc_name}"
   }
 }
 
 resource "aws_vpc_endpoint" "route53" {
   count = var.create_vpce_private_rosa_cluster ? 1 : 0
 
-  service_name      = "com.amazonaws.route53"
+  service_name = "com.amazonaws.route53"
   #vpc_id            = data.aws_vpc.get_rosa_vpc.id
   vpc_id            = aws_vpc.main.id
   vpc_endpoint_type = "Interface"
-  service_region = "us-east-1"
+  service_region    = "us-east-1"
 
   #private_dns_enabled = true
   #subnet_ids          = data.aws_subnets.private_subnets.ids
@@ -192,6 +192,6 @@ resource "aws_vpc_endpoint" "route53" {
   #]
 
   tags = {
-    Name    = "route53.${var.vpc_name}"
+    Name = "route53.${var.vpc_name}"
   }
 }

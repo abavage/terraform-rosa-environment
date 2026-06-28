@@ -115,7 +115,7 @@ resource "aws_route_table_association" "public" {
 ### EIP
 #resource "aws_eip" "nat" {
 #  for_each = aws_subnet.aws_subnet_public
-  #for_each = var.public ? aws_subnet.aws_subnet_public : {}
+#for_each = var.public ? aws_subnet.aws_subnet_public : {}
 
 #  domain = "vpc"
 
@@ -142,7 +142,7 @@ resource "aws_nat_gateway" "nat" {
   #  }
   #)
 
-  vpc_id = aws_vpc.main.id
+  vpc_id            = aws_vpc.main.id
   availability_mode = "regional"
 
   tags = {
@@ -165,7 +165,7 @@ resource "aws_route_table" "nat" {
   vpc_id = aws_vpc.main.id
 
   route {
-    cidr_block     = "0.0.0.0/0"
+    cidr_block = "0.0.0.0/0"
     #nat_gateway_id = aws_nat_gateway.nat[each.key].id
     nat_gateway_id = aws_nat_gateway.nat.id
   }
@@ -307,7 +307,7 @@ resource "aws_security_group" "authorize_inbound_vpc_traffic" {
   description = "security grroup for private cluster vpce"
 
   tags = {
-    Name    = "private-cluster-vpce.${var.vpc_name}"
+    Name = "private-cluster-vpce.${var.vpc_name}"
   }
 
 }
@@ -349,10 +349,10 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_egress" {
 
 ## Clean up orphanded SG
 resource "null_resource" "clean_up" {
-  depends_on = [ aws_vpc.main ]
+  depends_on = [aws_vpc.main]
 
   provisioner "local-exec" {
-    when = destroy
+    when    = destroy
     command = "bash scripts/security-group-cleanup.sh"
   }
 }

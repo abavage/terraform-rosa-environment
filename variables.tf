@@ -1,19 +1,19 @@
 variable "vpc_name" {
-  type = string
+  type        = string
   description = "Name of the vpc"
-  default = null
+  default     = null
 }
 
 variable "public_subnet_name" {
-  type = string
+  type        = string
   description = "Name for the public subnets"
-  default = null
+  default     = null
 }
 
 variable "private_subnet_name" {
-  type = string
+  type        = string
   description = "Name for the provate subnets"
-  default = null
+  default     = null
 }
 variable "aws_region" {
   type        = string
@@ -80,9 +80,9 @@ variable "ec2_linux_bastion_name" {
 }
 
 variable "ec2_linux_bastion_ssh_key" {
-  type = string
+  type        = string
   description = "ssh key name to access the ec2 instance full path to the local file ~/.ssh/somefile.pub "
-  default = null
+  default     = null
 }
 
 variable "ec2_windows_bastion_name" {

@@ -9,9 +9,9 @@
 
 
 resource "aws_security_group" "windows" {
-  name   = "windows-ec2-common"
+  name        = "windows-ec2-common"
   description = "common ingress port to windows ec2 hosts"
-  vpc_id = aws_vpc.main.id
+  vpc_id      = aws_vpc.main.id
 
   tags = {
     Name = "windows-ec2-common"

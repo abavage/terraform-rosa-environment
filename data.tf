@@ -21,7 +21,7 @@ data "aws_subnets" "private_subnets" {
     name   = "vpc-id"
     values = [aws_vpc.main.id]
   }
-  
+
   tags = {
     Name = "${var.private_subnet_name}*"
   }
